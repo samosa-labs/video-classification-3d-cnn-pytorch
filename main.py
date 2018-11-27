@@ -28,13 +28,6 @@ if __name__=="__main__":
     if opt.verbose:
         print(model)
 
-"""
-    input_files = []
-    with open(opt.input, 'r') as f:
-        for row in f:
-            input_files.append(row[:-1])
-"""
-
     class_names = []
     with open('class_names_list') as f:
         for row in f:
@@ -50,17 +43,17 @@ if __name__=="__main__":
     outputs = []
     video_path = opt.video_path
     if os.path.exists(video_path):
-    	print(video_path)
+        print(video_path)
         subprocess.call('mkdir tmp', shell=True)
         subprocess.call('ffmpeg -i {} tmp/image_%05d.jpg'.format(video_path),
                        shell=True)
 
-	result = classify_video('tmp', video_path, class_names, model, opt)
+        result = classify_video('tmp', video_path, class_names, model, opt)
         outputs.append(result)
 
         subprocess.call('rm -rf tmp', shell=True)
     else:
-    	print('{} does not exist'.format(video_path))
+        print('{} does not exist'.format(video_path))
 
     if os.path.exists('tmp'):
         subprocess.call('rm -rf tmp', shell=True)

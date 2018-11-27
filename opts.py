@@ -2,8 +2,9 @@ import argparse
 
 def parse_opts():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--input', default='input', type=str, help='Input file path')
-    parser.add_argument('--video_root', default='', type=str, help='Root path of input videos')
+    #parser.add_argument('--input', default='input', type=str, help='Input file path')
+    #parser.add_argument('--video_root', default='', type=str, help='Root path of input videos')
+    parser.add_argument('--video_path', default='', type=str, help='Full path to input video file')
     parser.add_argument('--model', default='', type=str, help='Model file path')
     parser.add_argument('--output', default='output.json', type=str, help='Output file path')
     parser.add_argument('--mode', default='score', type=str, help='Mode (score | feature). score outputs class scores. feature outputs features (after global average pooling).')
