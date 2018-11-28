@@ -22,7 +22,7 @@ def load_model(model, opt):
         if opt.verbose:
             print(model)
 
-def extract_features(model, opt):
+def extract_features(model, opt, video_path):
     if not model:
         load_model(model, opt)
         print("Model is null")
@@ -54,7 +54,6 @@ def extract_features(model, opt):
         subprocess.call('rm -rf tmp', shell=True)
 
     outputs = []
-    video_path = opt.video_path
     if os.path.exists(video_path):
         print(video_path)
         subprocess.call('mkdir tmp', shell=True)
