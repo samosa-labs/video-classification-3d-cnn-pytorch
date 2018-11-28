@@ -11,8 +11,18 @@ from model import generate_model
 from mean import get_mean
 from classify import classify_video
 
-if __name__=="__main__":
-    opt = parse_opts()
+def load_model(model, opt):
+    if not model:
+        model = generate_model(opt)
+        print('loading model {}'.format(opt.model))
+        model_data = torch.load(opt.model)
+        assert opt.arch == model_data['arch']
+        model.load_state_dict(model_data['state_dict'])
+        model.eval()
+        if opt.verbose:
+            print(model)
+
+def extract_features(model, opt):
     opt.mean = get_mean()
     opt.arch = '{}-{}'.format(opt.model_name, opt.model_depth)
     opt.sample_size = 112
@@ -60,3 +70,8 @@ if __name__=="__main__":
 
     with open(opt.output, 'w') as f:
         json.dump(outputs, f)
+
+if __name__ == "__main__"
+    opt = parse_opts()
+    model = generate_model(opt)
+    load_model(model, opt)
