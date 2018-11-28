@@ -23,6 +23,9 @@ def load_model(model, opt):
             print(model)
 
 def extract_features(model, opt):
+    if not model:
+        load_model(model, opt)
+        print("Model is null")
     opt.mean = get_mean()
     opt.arch = '{}-{}'.format(opt.model_name, opt.model_depth)
     opt.sample_size = 112
@@ -73,5 +76,5 @@ def extract_features(model, opt):
 
 if __name__ == "__main__"
     opt = parse_opts()
-    model = generate_model(opt)
     load_model(model, opt)
+    extract_features(model, opt)
