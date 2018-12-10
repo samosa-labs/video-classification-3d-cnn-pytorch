@@ -70,8 +70,9 @@ def extract_features(model, opt, video_path):
     # if os.path.exists('/home/ubuntu/temp_files/'):
     #    subprocess.call('rm -rf /home/ubuntu/temp_files/', shell=True)
 
-    with open(opt.output, 'w') as f:
-        json.dump(outputs, f)
+    # with open(opt.output, 'w') as f:
+    #    json.dump(outputs, f)
+    return outputs
 
 
 if __name__ == "__main__":
