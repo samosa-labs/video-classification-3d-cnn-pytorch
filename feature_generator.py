@@ -6,10 +6,10 @@ import numpy as np
 import torch
 from torch import nn
 
-from opts import parse_opts
-from model import generate_model
-from mean import get_mean
-from classify import classify_video
+from video_features_generator.opts import parse_opts
+from video_features_generator.model import generate_model
+from video_features_generator.mean import get_mean
+from video_features_generator.classify import classify_video
 
 def load_model(model, opt):
     if not model:
@@ -42,7 +42,7 @@ def extract_features(model, opt, video_path):
         print(model)
 
     class_names = []
-    with open('class_names_list') as f:
+    with open('video_features_generator/class_names_list') as f:
         for row in f:
             class_names.append(row[:-1])
 
@@ -50,30 +50,32 @@ def extract_features(model, opt, video_path):
     if opt.verbose:
         ffmpeg_loglevel = 'info'
 
-    if os.path.exists('tmp'):
-        subprocess.call('rm -rf tmp', shell=True)
+    # if os.path.exists('/home/ubuntu/temp_files/'):
+    #    subprocess.call('rm -rf /home/ubuntu/temp_files/', shell=True)
 
     outputs = []
     if os.path.exists(video_path):
         print(video_path)
-        subprocess.call('mkdir tmp', shell=True)
-        subprocess.call('ffmpeg -i {} tmp/image_%05d.jpg'.format(video_path),
-                       shell=True)
+        subprocess.call('mkdir /home/ubuntu/temp_files/', shell=True)
+        subprocess.call('ffmpeg -i {} /home/ubuntu/temp_files/image_%05d.jpg'.format(video_path),
+                        shell=True)
 
-        result = classify_video('tmp', video_path, class_names, model, opt)
+        result = classify_video('/home/ubuntu/temp_files/', video_path, class_names, model, opt)
         outputs.append(result)
 
-        subprocess.call('rm -rf tmp', shell=True)
+        # subprocess.call('rm -rf /home/ubuntu/temp_files/', shell=True)
     else:
         print('{} does not exist'.format(video_path))
 
-    if os.path.exists('tmp'):
-        subprocess.call('rm -rf tmp', shell=True)
+    # if os.path.exists('/home/ubuntu/temp_files/'):
+    #    subprocess.call('rm -rf /home/ubuntu/temp_files/', shell=True)
 
     with open(opt.output, 'w') as f:
         json.dump(outputs, f)
 
-if __name__ == "__main__"
+
+if __name__ == "__main__":
     opt = parse_opts()
-    load_model(model, opt)
-    extract_features(model, opt)
+    load_model(opt.model, opt)
+    extract_features(opt.model, opt)
+

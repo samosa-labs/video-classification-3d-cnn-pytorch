@@ -1,9 +1,9 @@
 import torch
 from torch.autograd import Variable
 
-from dataset import Video
-from spatial_transforms import (Compose, Normalize, Scale, CenterCrop, ToTensor)
-from temporal_transforms import LoopPadding
+from video_features_generator.dataset import Video
+from video_features_generator.spatial_transforms import (Compose, Normalize, Scale, CenterCrop, ToTensor)
+from video_features_generator.temporal_transforms import LoopPadding
 
 def classify_video(video_dir, video_name, class_names, model, opt):
     assert opt.mode in ['score', 'feature']
@@ -16,7 +16,7 @@ def classify_video(video_dir, video_name, class_names, model, opt):
     data = Video(video_dir, spatial_transform=spatial_transform,
                  temporal_transform=temporal_transform,
                  sample_duration=opt.sample_duration)
-    data_loader = torch.utils.data.DataLoader(data, batch_size=opt.batch_size,
+    data_loader = torch.utils.data.DataLoader(data, batch_size=1,
                                               shuffle=False, num_workers=opt.n_threads, pin_memory=True)
 
     video_outputs = []
