@@ -11,7 +11,9 @@ from video_features_generator.model import generate_model
 from video_features_generator.mean import get_mean
 from video_features_generator.classify import classify_video
 
-def load_model(model, opt):
+opt = parse_opts()
+
+def load_model(model=opt.model):
     if not model:
         model = generate_model(opt)
         print('loading model {}'.format(opt.model))
@@ -22,7 +24,8 @@ def load_model(model, opt):
         if opt.verbose:
             print(model)
 
-def extract_features(model, opt, video_path):
+def extract_features(model=opt.model, video_path=opt.video_path, working_dir="/tmp/"):
+    print ("coming to extract features")
     if not model:
         load_model(model, opt)
         print("Model is null")
@@ -55,15 +58,27 @@ def extract_features(model, opt, video_path):
 
     outputs = []
     if os.path.exists(video_path):
-        print(video_path)
-        subprocess.call('mkdir /home/ubuntu/temp_files/', shell=True)
-        subprocess.call('ffmpeg -i {} /home/ubuntu/temp_files/image_%05d.jpg'.format(video_path),
+        print(video_path, working_dir)
+        if not os.path.exists(working_dir):
+          os.mkdir(working_dir)
+        ten_second_video_path = working_dir + working_dir.split("/")[-1] + "_10s.mp4"
+        subprocess.call(
+          "ffmpeg -y -i " + video_path + " -ss 0 -t 10 " + ten_second_video_path,
+          shell=True
+        )
+        subprocess.call('ffmpeg -i {} {}/image_%05d.jpg'.format(ten_second_video_path, working_dir),
                         shell=True)
+        print("extracting images from video successful")
 
-        result = classify_video('/home/ubuntu/temp_files/', video_path, class_names, model, opt)
-        outputs.append(result)
+        print(working_dir, ten_second_video_path)
+        if len(os.listdir(working_dir)) > 32: 
+          result = classify_video(working_dir, ten_second_video_path, class_names, model, opt)
+          print("classifying video successful")
+          outputs.append(result)
+        else:
+          print("classifying video failed")
 
-        # subprocess.call('rm -rf /home/ubuntu/temp_files/', shell=True)
+        subprocess.call('rm -rf %s'%(working_dir), shell=True)
     else:
         print('{} does not exist'.format(video_path))
 
@@ -76,7 +91,6 @@ def extract_features(model, opt, video_path):
 
 
 if __name__ == "__main__":
-    opt = parse_opts()
-    load_model(opt.model, opt)
-    extract_features(opt.model, opt)
+    load_model()
+    extract_features()
 
