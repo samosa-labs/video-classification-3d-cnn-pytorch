@@ -61,18 +61,13 @@ def extract_features(model=opt.model, video_path=opt.video_path, working_dir="/t
         print(video_path, working_dir)
         if not os.path.exists(working_dir):
           os.mkdir(working_dir)
-        ten_second_video_path = working_dir + working_dir.split("/")[-1] + "_10s.mp4"
-        subprocess.call(
-          "ffmpeg -y -i " + video_path + " -ss 0 -t 10 " + ten_second_video_path,
-          shell=True
-        )
-        subprocess.call('ffmpeg -i {} {}/image_%05d.jpg'.format(ten_second_video_path, working_dir),
+        subprocess.call('ffmpeg -i {} -ss 0 -t 8 {}/image_%05d.jpg'.format(video_path, working_dir),
                         shell=True)
         print("extracting images from video successful")
 
-        print(working_dir, ten_second_video_path)
+        print(working_dir, video_path)
         if len(os.listdir(working_dir)) > 32: 
-          result = classify_video(working_dir, ten_second_video_path, class_names, model, opt)
+          result = classify_video(working_dir, video_path, class_names, model, opt)
           print("classifying video successful")
           outputs.append(result)
         else:
