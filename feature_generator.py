@@ -61,7 +61,7 @@ def extract_features(model=opt.model, video_path=opt.video_path, working_dir="/t
         print(video_path, working_dir)
         if not os.path.exists(working_dir):
           os.mkdir(working_dir)
-        subprocess.call('ffmpeg -i {} -ss 0 -t 8 {}/image_%05d.jpg'.format(video_path, working_dir),
+        subprocess.call('ffmpeg -i {} -ss 0 -t 10 {}/image_%05d.jpg'.format(video_path, working_dir),
                         shell=True)
         print("extracting images from video successful")
 
